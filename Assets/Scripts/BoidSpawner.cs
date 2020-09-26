@@ -2,27 +2,34 @@
 
 public class BoidSpawner : MonoBehaviour
 {
-    public GameObject boidPrefab;
+    public Boid boidPrefab;
     public int numberOfBoids = 10;
     public float spawnRadius = 2;
-    // Boid[] boids;
+    Boid[] boids;
 
     void Awake()
     {
-        // boids = new Boid[numberOfBoids];
+        boids = new Boid[numberOfBoids];
 
         for (int i = 0; i < numberOfBoids; i++)
         {
-            GameObject boid = Instantiate(boidPrefab);
+            Boid boid = Instantiate(boidPrefab);
             boid.transform.position = transform.position + Random.insideUnitSphere * spawnRadius;
             boid.transform.forward = Random.onUnitSphere;
-
-            // boids[i] = boid;
+            boids[i] = boid;
         }
     }
 
-    // Draw a transparent sphere in the editor to visualize the spawn radius.
-    void OnDrawGizmos()
+    void Update()
+    {
+        foreach (Boid b in boids)
+        {
+            b.UpdateBoid();
+        }
+    }
+
+    // Draw a transparent sphere in the Unity editor to visualize the spawn radius.
+    void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0f, 0.2f, 0.4f, 0.2f);
         Gizmos.DrawSphere(Vector3.zero, spawnRadius);
