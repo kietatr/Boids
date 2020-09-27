@@ -22,12 +22,15 @@ public class BoidSpawner : MonoBehaviour
 
     void Update()
     {
-        foreach (Boid b in boids)
+        foreach (Boid boid in boids)
         {
-            b.UpdateBoid();
+            boid.UpdateBoid();
+            boid.Separation(boids);
+            boid.Cohesion(boids);
         }
     }
 
+    // (For debugging purposes)
     // Draw a transparent sphere in the Unity editor to visualize the spawn radius.
     void OnDrawGizmosSelected()
     {

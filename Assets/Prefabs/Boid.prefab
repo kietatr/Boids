@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  maxSteeringForce: 2
+  maxSteeringForce: 1
+  separationRadius: 0.4
+  cohesionRadius: 0.8
 --- !u!1 &8574945812769154113
 GameObject:
   m_ObjectHideFlags: 0
