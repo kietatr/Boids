@@ -3,7 +3,7 @@
 public class BoidSpawner : MonoBehaviour
 {
     public Boid boidPrefab;
-    public int numberOfBoids = 10;
+    public int numberOfBoids = 100;
     public float spawnRadius = 2;
     Boid[] boids;
 

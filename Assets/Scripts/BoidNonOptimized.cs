@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+// A non-optimized and verbose version of Boid.cs. 
+// For archival purpose only. Not currently in use.
 public class BoidNonOptimized : MonoBehaviour
 {
     Vector3 velocity = Vector3.zero;

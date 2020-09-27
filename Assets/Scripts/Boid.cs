@@ -10,7 +10,6 @@ public class Boid : MonoBehaviour
     Vector3 avgFlockPosition = Vector3.zero;
     Vector3 avgSeparationDirection = Vector3.zero;
 
-    public float minSpeed = 3.0f;
     public float maxSpeed = 10.0f;
     public float maxSteeringForce = 2.0f;
 
@@ -61,11 +60,14 @@ public class Boid : MonoBehaviour
 
             // Cohesion
             avgFlockPosition /= numberOfNeighbors;
-            acceleration += Steer(avgFlockPosition - transform.position) * separationWeight;
+            acceleration += Steer(avgFlockPosition - transform.position) * cohesionWeight;
 
             // Alignment
             avgFlockAlignment /= numberOfNeighbors;
             acceleration += Steer(avgFlockAlignment) * alignmentWeight;
+
+            // Some wandering force
+            acceleration += new Vector3(Random.Range(0.25f, 1f), Random.Range(0.25f, 1f), Random.Range(0.25f, 1f));
         }
     }
 
