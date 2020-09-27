@@ -25,8 +25,7 @@ public class BoidSpawner : MonoBehaviour
         foreach (Boid boid in boids)
         {
             boid.UpdateBoid();
-            boid.Separation(boids);
-            boid.Cohesion(boids);
+            boid.ApplyFlockingBehaviors(boids);
         }
     }
 

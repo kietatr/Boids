@@ -5,121 +5,88 @@ public class Boid : MonoBehaviour
     Vector3 velocity = Vector3.zero;
     Vector3 acceleration = Vector3.zero;
 
-    // TODO: Play with these values.
-    public float maxSpeed = 10f;
-    public float maxSteeringForce = 1f;
-    public float separationRadius = 0.4f;
-    public float cohesionRadius = 0.8f;
+    int numberOfNeighbors = 0;
+    Vector3 avgFlockAlignment = Vector3.zero;
+    Vector3 avgFlockPosition = Vector3.zero;
+    Vector3 avgSeparationDirection = Vector3.zero;
 
-    GameObject sharedTarget;
+    public float minSpeed = 3.0f;
+    public float maxSpeed = 10.0f;
+    public float maxSteeringForce = 2.0f;
 
-    void Awake()
-    {
-        velocity = velocity.normalized * maxSpeed;
+    public float perceptionRadius = 2.0f;
+    public float separationRadius = 1.0f;
 
-        sharedTarget = GameObject.FindWithTag("Target");
-    }
-
+    public float separationWeight = 1.0f;
+    public float cohesionWeight = 1.0f;
+    public float alignmentWeight = 1.0f;
+    
     public void UpdateBoid()
     {
-        // Acceleration is cleared every frame, because we don't want to add up forces from previous frames.
-        acceleration = Vector3.zero;
-
-        if (sharedTarget != null)
-        {
-            SteerTowards(sharedTarget.transform.position);
-        }
-
         velocity += acceleration * Time.deltaTime;
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
 
         // Update the instantiated prefab.
         transform.position += velocity * Time.deltaTime;
         transform.forward = velocity.normalized;
+
+        // Acceleration is cleared every frame, because we don't want to add up forces from previous frames.
+        acceleration = Vector3.zero;
     }
 
-    // Push away from neighbors if they're too close.
-    public void Separation(Boid[] boids)
+    public void ApplyFlockingBehaviors(Boid[] boids) 
     {
-        Vector3 sumOfSeparationDirections = Vector3.zero;
-        int numberOfSeparationDirections = 0;
-        Vector3 averageSeparationDirection = Vector3.zero;
-
-        foreach (Boid otherBoid in boids)
+        foreach (Boid other in boids)
         {
-            float distanceToOtherBoid = Vector3.Distance(transform.position, otherBoid.transform.position);
-
-            // Make sure that the distance is not a distance to ourselveself, and that the distance is close enough.
-            if ((distanceToOtherBoid > 0) && (distanceToOtherBoid < separationRadius))
+            Vector3 thisToOther = other.transform.position - transform.position;
+            float squaredDist = thisToOther.x * thisToOther.x + thisToOther.y * thisToOther.y + thisToOther.z * thisToOther.z;
+            if ((squaredDist < perceptionRadius * perceptionRadius) && (squaredDist > 0.001f))
             {
-                // The direction to separate from a neighbor.
-                Vector3 separationDirection = (transform.position - otherBoid.transform.position).normalized;
-
-                // Add up all the separation directions from our neighbors, to find an average separation direction.
-                sumOfSeparationDirections += separationDirection;
-                numberOfSeparationDirections++;
-            }
-
-            if (numberOfSeparationDirections > 0)
-            {
-                averageSeparationDirection = sumOfSeparationDirections / numberOfSeparationDirections;
-                SteerInDirectionOf(averageSeparationDirection);
-            }
-        }
-    }
-
-    // Stick to the average positions of our neighbors.
-    public void Cohesion(Boid[] boids)
-    {
-        Vector3 sumOfNeighborsPositions = Vector3.zero;
-        int numberOfNeighbors = 0;
-        Vector3 averageNeighborsPosition = Vector3.zero;
-
-        foreach (Boid otherBoid in boids)
-        {
-            float distanceToOtherBoid = Vector3.Distance(transform.position, otherBoid.transform.position);
-
-            // Make sure that the distance is not a distance to ourselves, and that the distance is close enough.
-            if ((distanceToOtherBoid > 0) && (distanceToOtherBoid < cohesionRadius))
-            {
-                // Add up all the positions of our neighbors.
-                sumOfNeighborsPositions += otherBoid.transform.position;
                 numberOfNeighbors++;
-            }
+                avgFlockAlignment += other.transform.forward;
+                avgFlockPosition += other.transform.position;
 
-            if (numberOfNeighbors > 0)
-            {
-                averageNeighborsPosition = sumOfNeighborsPositions / numberOfNeighbors;
-                SteerTowards(averageNeighborsPosition);
+                if (squaredDist < separationRadius * separationRadius)
+                {
+                    avgSeparationDirection += (-thisToOther)/(squaredDist); 
+                }
             }
+        }
+
+        if (numberOfNeighbors >= 1) 
+        {
+            // Separation
+            avgSeparationDirection /= numberOfNeighbors;
+            acceleration += Steer(avgSeparationDirection) * separationWeight;
+
+            // Cohesion
+            avgFlockPosition /= numberOfNeighbors;
+            acceleration += Steer(avgFlockPosition - transform.position) * separationWeight;
+
+            // Alignment
+            avgFlockAlignment /= numberOfNeighbors;
+            acceleration += Steer(avgFlockAlignment) * alignmentWeight;
         }
     }
 
-    void SteerInDirectionOf(Vector3 desiredDirection)
+    // Reynold's formula: Steering Force = Desired Velocity - Velocity
+    Vector3 Steer(Vector3 AtoB)
     {
-        Vector3 desiredVelocity = desiredDirection * maxSpeed;
-        Vector3 steeringForce = desiredVelocity - velocity;
-        AddForce(Vector3.ClampMagnitude(steeringForce, maxSteeringForce));
+        Vector3 steeringForce = (AtoB.normalized * maxSpeed) - velocity;
+        return Vector3.ClampMagnitude(steeringForce, maxSteeringForce);
     }
 
-    void SteerTowards(Vector3 targetPosition)
-    {
-        Vector3 desiredVelocity = (targetPosition - transform.position).normalized * maxSpeed;
-        Vector3 steeringForce = desiredVelocity - velocity;
-        AddForce(Vector3.ClampMagnitude(steeringForce, maxSteeringForce));
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void AddForce(Vector3 force)
-    {
-        // Acceleration = Sum of all forces / Mass.
-        acceleration += force;
-    }
-
-    void OnDrawGizmosSelected() 
-    {
-        Gizmos.color = new Color(0f, 1f, 0f, 0.2f);
-        Gizmos.DrawSphere(transform.position, cohesionRadius);
-        Gizmos.color = new Color(1f, 0f, 1f, 0.2f);
-        Gizmos.DrawSphere(transform.position, separationRadius);
-    }
+    // (For debugging purposes)
+    // Draw a transparent sphere for each property's radius.
+    // void OnDrawGizmosSelected() 
+    // {
+    //     Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
+    //     Gizmos.DrawSphere(transform.position, separationRadius);
+    //     Gizmos.color = new Color(0f, 1f, 0f, 0.2f);
+    //     Gizmos.DrawSphere(transform.position, cohesionRadius);
+    //     Gizmos.color = new Color(0f, 0f, 1f, 0.2f);
+    //     Gizmos.DrawSphere(transform.position, alignmentRadius);
+    // }
 }

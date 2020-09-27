@@ -44,10 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb70a6e2d9aee5f4b96c58e5e322b23a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 10
-  maxSteeringForce: 1
-  separationRadius: 0.4
-  cohesionRadius: 0.8
+  minSpeed: 3
+  maxSpeed: 5
+  maxSteeringForce: 2
+  separationRadius: 1
+  cohesionRadius: 2
+  alignmentRadius: 2
+  separationWeight: 1
+  cohesionWeight: 1
+  alignmentWeight: 1
 --- !u!1 &8574945812769154113
 GameObject:
   m_ObjectHideFlags: 0
