@@ -20,6 +20,12 @@ public class Boid : MonoBehaviour
     public float cohesionWeight = 1.0f;
     public float alignmentWeight = 1.0f;
     
+    void Start()
+    {
+        // velocity = new Vector3(Random.Range(-2.0f, 2.0f), Random.Range(-2.0f, 2.0f), Random.Range(-2.0f, 2.0f));
+        velocity = transform.forward * maxSpeed;
+    }
+
     public void UpdateBoid()
     {
         velocity += acceleration * Time.deltaTime;
@@ -27,7 +33,10 @@ public class Boid : MonoBehaviour
 
         // Update the instantiated prefab.
         transform.position += velocity * Time.deltaTime;
-        transform.forward = velocity.normalized;
+        if (velocity != Vector3.zero)
+        {
+            transform.forward = velocity;
+        }
 
         // Acceleration is cleared every frame, because we don't want to add up forces from previous frames.
         acceleration = Vector3.zero;
@@ -39,7 +48,9 @@ public class Boid : MonoBehaviour
         {
             Vector3 thisToOther = other.transform.position - transform.position;
             float squaredDist = thisToOther.x * thisToOther.x + thisToOther.y * thisToOther.y + thisToOther.z * thisToOther.z;
-            if ((squaredDist < perceptionRadius * perceptionRadius) && (squaredDist > 0.001f))
+
+            // Check if the distance to other boid is inside our perception radius.
+            if ((squaredDist < perceptionRadius * perceptionRadius) && (squaredDist > 0.01f))
             {
                 numberOfNeighbors++;
                 avgFlockAlignment += other.transform.forward;
@@ -67,7 +78,7 @@ public class Boid : MonoBehaviour
             acceleration += Steer(avgFlockAlignment) * alignmentWeight;
 
             // Some wandering force
-            acceleration += new Vector3(Random.Range(0.25f, 1f), Random.Range(0.25f, 1f), Random.Range(0.25f, 1f));
+            acceleration += new Vector3(Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), Random.Range(0.5f, 1f));
         }
     }
 
@@ -76,6 +87,15 @@ public class Boid : MonoBehaviour
     {
         Vector3 steeringForce = (AtoB.normalized * maxSpeed) - velocity;
         return Vector3.ClampMagnitude(steeringForce, maxSteeringForce);
+    }
+
+    public void StayInsideSphereBoundaries(Vector3 sphereCenter, float sphereRadius)
+    {
+        Vector3 toSphereCenter = sphereCenter - transform.position;
+        if (toSphereCenter.sqrMagnitude >= sphereRadius * sphereRadius)
+        {
+            acceleration += Steer(toSphereCenter) * 4f;
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
