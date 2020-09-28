@@ -3535,7 +3535,7 @@ GameObject:
   - component: {fileID: 533988169}
   - component: {fileID: 533988168}
   m_Layer: 0
-  m_Name: BoidSpawner
+  m_Name: BoidSpawner 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3555,7 +3555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: -4010056217280331086, guid: 807a73b66d4188448a92fa60ebff6a5d,
     type: 3}
-  numberOfBoids: 300
+  numberOfBoids: 400
   spawnRadius: 18.41
   stayInsideSphere: 1
 --- !u!4 &533988169
@@ -6895,13 +6895,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.09071838, y: 0.89939123, z: -0.27033025, w: 0.33134153}
-  m_LocalPosition: {x: -23.28, y: 15.89, z: 36.92}
+  m_LocalRotation: {x: 0.087505534, y: 0.90624195, z: -0.23125923, w: 0.34291038}
+  m_LocalPosition: {x: -19.18, y: 13.32, z: 28.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 33.119003, y: 139.227, z: -1.092}
+  m_LocalEulerAnglesHint: {x: 28.631, y: 138.548, z: 0}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9503,6 +9503,54 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1277773195}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1303954743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1303954745}
+  - component: {fileID: 1303954744}
+  m_Layer: 0
+  m_Name: BoidSpawner 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1303954744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303954743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d5ed1ffa9b6a5b43ae8977bc3ff8ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boidPrefab: {fileID: -4010056217280331086, guid: 807a73b66d4188448a92fa60ebff6a5d,
+    type: 3}
+  numberOfBoids: 300
+  spawnRadius: 13.38
+  stayInsideSphere: 0
+--- !u!4 &1303954745
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303954743}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3, y: 7.91, z: 25.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1340200272
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9814,9 +9862,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: -4010056217280331086, guid: 807a73b66d4188448a92fa60ebff6a5d,
     type: 3}
-  numberOfBoids: 200
-  spawnRadius: 6.35
-  stayInsideSphere: 1
+  numberOfBoids: 300
+  spawnRadius: 10.53
+  stayInsideSphere: 0
 --- !u!4 &1413544635
 Transform:
   m_ObjectHideFlags: 0
@@ -9825,7 +9873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1413544633}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.82, y: 14.67, z: 5.66}
+  m_LocalPosition: {x: -3.37, y: 7.91, z: -16.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
